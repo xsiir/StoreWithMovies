@@ -38,11 +38,13 @@ public class HomeController {
 	
 	
 	//W TRAKCIE
-	@RequestMapping(value = "/sz", method = RequestMethod.POST)
-	public String addMovie(@ModelAttribute("movie") Integer movieId) {
+	@RequestMapping(value = "/", method = RequestMethod.POST)
+	public String addMovie(@ModelAttribute("movie") Integer movieId,  @RequestParam("currentCategory")  String currentCategory) {
 		shoppingCart.addProduct(movieRepository.getMovieById(movieId));
-		System.out.println(shoppingCart.getAllProducts().get(0).getTitle());
-		return "redirect:/StoreWithMovies";
-		
+		System.out.println(shoppingCart.getAllProducts().size());
+		for(MovieDTO movie : shoppingCart.getAllProducts()) {
+			System.out.println(movie.getTitle());
+		}
+		return "redirect:?category="+currentCategory;
 	}
 }
