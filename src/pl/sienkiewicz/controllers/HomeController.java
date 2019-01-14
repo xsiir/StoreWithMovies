@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import pl.sienkiewicz.api.CurrencyConverter;
@@ -32,19 +33,22 @@ public class HomeController {
 	public ModelAndView getMovies(@RequestParam(name = "category", required = false, defaultValue = "ANY") String category) {
 		ModelAndView model = new ModelAndView("index");
 		model.addObject("movieList", movieRepository.getMoviesByCategory(category));
+		model.addObject("selectedCategory", category);
 		model.addObject("shoppingCart", shoppingCart);
+		model.addObject("converter", currencyConverter);
 		return model;
 	}
 	
 	
-	//W TRAKCIE
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	public String addMovie(@ModelAttribute("movie") Integer movieId,  @RequestParam("currentCategory")  String currentCategory) {
 		shoppingCart.addProduct(movieRepository.getMovieById(movieId));
-		System.out.println(shoppingCart.getAllProducts().size());
-		for(MovieDTO movie : shoppingCart.getAllProducts()) {
-			System.out.println(movie.getTitle());
-		}
 		return "redirect:?category="+currentCategory;
+	}
+	
+	@RequestMapping(value = "/remove", method = RequestMethod.POST)
+	public String remove(@ModelAttribute("movie") Integer movieId,  @RequestParam("currentCategory")  String currentCategory) {
+		shoppingCart.removeProduct(movieRepository.getMovieById(movieId));
+		return "redirect:.?category="+currentCategory;
 	}
 }

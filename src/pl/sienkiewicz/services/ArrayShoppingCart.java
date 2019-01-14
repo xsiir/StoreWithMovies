@@ -3,12 +3,15 @@ package pl.sienkiewicz.services;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 
 import pl.sienkiewicz.api.ShoppingCart;
 import pl.sienkiewicz.dto.MovieDTO;
 
 @Service
+@Scope(value = "session",  proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class ArrayShoppingCart implements ShoppingCart {
 
 	private ArrayList<MovieDTO> cart = new ArrayList<>();
