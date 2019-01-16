@@ -7,7 +7,7 @@ import pl.sienkiewicz.dto.MovieDTO;
 public interface MovieRepository {
 	
 	List<MovieDTO> getMovies();
-	List<MovieDTO> getMoviesByCategory(String category, Integer page);
+	List<MovieDTO> getMoviesByCategory(String category);
 	MovieDTO getMovieById(Integer id);
 
 }

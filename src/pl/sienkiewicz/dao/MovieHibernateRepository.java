@@ -1,5 +1,6 @@
 package pl.sienkiewicz.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -26,14 +27,15 @@ public class MovieHibernateRepository implements MovieRepository {
 	}
 
 	@Override
-	public List<MovieDTO> getMoviesByCategory(String category, Integer page) {
+	public List<MovieDTO> getMoviesByCategory(String category) {
+		String query;
 		if (category.equalsIgnoreCase("ANY")) {
-			return getMovies().subList(page*5-5, page*5);
-		} else {
-			String query = "SELECT m FROM MOVIES m WHERE category = '" + category + "'";
-			TypedQuery<MovieDTO> x = entityManager.createQuery(query, MovieDTO.class);
-			return x.getResultList().subList(page*5-5, page*5);
+			query = "SELECT m FROM MOVIES m";
+		}else {
+			query = "SELECT m FROM MOVIES m WHERE category = '" + category + "'";
 		}
+		TypedQuery<MovieDTO> x = entityManager.createQuery(query, MovieDTO.class);
+		return x.getResultList();
 	}
 
 	@Override

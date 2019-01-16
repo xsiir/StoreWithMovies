@@ -11,8 +11,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import pl.sienkiewicz.api.CurrencyConverter;
 import pl.sienkiewicz.api.MovieRepository;
+import pl.sienkiewicz.api.PageService;
 import pl.sienkiewicz.api.ShoppingCart;
 import pl.sienkiewicz.dto.MovieDTO;
+import pl.sienkiewicz.services.PageServiceImpl;
 
 @Controller
 @RequestMapping("/")
@@ -21,13 +23,15 @@ public class HomeController {
 	private CurrencyConverter currencyConverter;
 	private MovieRepository movieRepository;
 	private ShoppingCart shoppingCart;
+	private PageService pageService;
 
 	@Autowired
 	public HomeController(CurrencyConverter currencyConverter, MovieRepository movieRepository,
-			ShoppingCart shoppingCart) {
+			ShoppingCart shoppingCart, PageService pageService) {
 		this.currencyConverter = currencyConverter;
 		this.movieRepository = movieRepository;
 		this.shoppingCart = shoppingCart;
+		this.pageService =  pageService;
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
@@ -35,7 +39,7 @@ public class HomeController {
 			@RequestParam(name = "category", required = false, defaultValue = "ANY") String category,
 			@RequestParam(name = "page", required = false, defaultValue = "1") Integer pageNumber) {
 		ModelAndView model = new ModelAndView("index");
-		model.addObject("movieList", movieRepository.getMoviesByCategory(category, pageNumber));
+		model.addObject("movieList", pageService.changePage(category, pageNumber));
 		model.addObject("selectedCategory", category);
 		model.addObject("shoppingCart", shoppingCart);
 		model.addObject("converter", currencyConverter);
