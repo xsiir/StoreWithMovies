@@ -11,6 +11,7 @@
 	<!-- PAGE TITLE -->
 	<div style="float: left; text-align: center">
 		<h1>MOVIE SHOP</h1>
+		${movieList.get(0).getCategory()}
 
 		<!-- SELECT BOX -->
 		<form action="/StoreWithMovies" method="GET">
@@ -51,6 +52,8 @@
 							value="${movie.getId()}" /> ${movie.getPrice()} PLN <input
 							type="hidden" name="currentCategory" id="currentCategory"
 							value="${movie.getCategory()}" /> <input type="submit" value="-" />
+							<input type="hidden" name="page" value="${currentPage}" />
+
 						</li>
 					</form>
 				</c:forEach>
@@ -68,11 +71,29 @@
 						<input type="hidden" name="movie" value="${listValue.getId()}" />
 						<input type="hidden" name="currentCategory"
 							value="${listValue.getCategory()}" />
+						<input type="hidden" name="page" value="${currentPage}" />
 						<input type="submit" value="+" />
 					</form:form>${listValue.getPrice()}$ <br></li>
 				</br>
 			</c:forEach>
 		</ul>
 	</div>
+
+		<div style="float:left;">
+			<form:form method="POST" style="float:left;" action="/StoreWithMovies/previousPage">
+				<input type="hidden" name="page" value="${currentPage}" />
+				<input type="hidden" name="currentCategory"
+					value="${movieList.get(0).getCategory()}" />
+				<input type="submit" value="<--" style="width: 90px; height: 60px;" />
+			</form:form>
+			<form:form method="POST" style="float:left;" action="/StoreWithMovies/nextPage">
+				<input type="hidden" name="page" value="${currentPage}" />
+				<input type="hidden" name="currentCategory"
+					value="${movieList.get(0).getCategory()}" />
+				<input type="submit" value="-->" style="width: 90px; height: 60px;"/>
+			</form:form>
+
+		</div>
+	
 </body>
 </html>

@@ -26,13 +26,13 @@ public class MovieHibernateRepository implements MovieRepository {
 	}
 
 	@Override
-	public List<MovieDTO> getMoviesByCategory(String category) {
+	public List<MovieDTO> getMoviesByCategory(String category, Integer page) {
 		if (category.equalsIgnoreCase("ANY")) {
-			return getMovies();
+			return getMovies().subList(page*5-5, page*5);
 		} else {
 			String query = "SELECT m FROM MOVIES m WHERE category = '" + category + "'";
 			TypedQuery<MovieDTO> x = entityManager.createQuery(query, MovieDTO.class);
-			return x.getResultList();
+			return x.getResultList().subList(page*5-5, page*5);
 		}
 	}
 

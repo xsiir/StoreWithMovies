@@ -19,36 +19,53 @@ import pl.sienkiewicz.dto.MovieDTO;
 public class HomeController {
 
 	private CurrencyConverter currencyConverter;
-	private MovieRepository  movieRepository;
+	private MovieRepository movieRepository;
 	private ShoppingCart shoppingCart;
 
 	@Autowired
-	public HomeController(CurrencyConverter currencyConverter, MovieRepository movieRepository, ShoppingCart shoppingCart) {
+	public HomeController(CurrencyConverter currencyConverter, MovieRepository movieRepository,
+			ShoppingCart shoppingCart) {
 		this.currencyConverter = currencyConverter;
 		this.movieRepository = movieRepository;
 		this.shoppingCart = shoppingCart;
 	}
-	
-	@RequestMapping(value = "/", method=RequestMethod.GET)
-	public ModelAndView getMovies(@RequestParam(name = "category", required = false, defaultValue = "ANY") String category) {
+
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public ModelAndView getMovies(
+			@RequestParam(name = "category", required = false, defaultValue = "ANY") String category,
+			@RequestParam(name = "page", required = false, defaultValue = "1") Integer pageNumber) {
 		ModelAndView model = new ModelAndView("index");
-		model.addObject("movieList", movieRepository.getMoviesByCategory(category));
+		model.addObject("movieList", movieRepository.getMoviesByCategory(category, pageNumber));
 		model.addObject("selectedCategory", category);
 		model.addObject("shoppingCart", shoppingCart);
 		model.addObject("converter", currencyConverter);
+		model.addObject("currentPage", pageNumber);
 		return model;
 	}
-	
-	
+
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public String addMovie(@ModelAttribute("movie") Integer movieId,  @RequestParam("currentCategory")  String currentCategory) {
+	public String addMovie(@ModelAttribute("movie") Integer movieId,
+			@RequestParam("currentCategory") String currentCategory,
+			@RequestParam(name = "page", required = false, defaultValue = "1") Integer pageNumber) {
 		shoppingCart.addProduct(movieRepository.getMovieById(movieId));
-		return "redirect:?category="+currentCategory;
+		return "redirect:?category=" + currentCategory + "&page=" + pageNumber;
+	}
+
+	@RequestMapping(value = "/remove", method = RequestMethod.POST)
+	public String remove(@ModelAttribute("movie") Integer movieId,  @RequestParam("currentCategory")  String currentCategory, @RequestParam(name = "page", required = false, defaultValue = "1") Integer pageNumber) {
+		shoppingCart.removeProduct(movieRepository.getMovieById(movieId));
+		return "redirect:.?category="+currentCategory+"&page="+pageNumber;
+	}
+
+	@RequestMapping(value = "/previousPage",  method =  RequestMethod.POST)
+	public String previousPage(@RequestParam("currentCategory")  String currentCategory, @RequestParam(name = "page", required = false, defaultValue = "1") Integer pageNumber){
+		if(pageNumber>1) {pageNumber--;}
+		return "redirect:.?category="+currentCategory+"&page="+pageNumber;
 	}
 	
-	@RequestMapping(value = "/remove", method = RequestMethod.POST)
-	public String remove(@ModelAttribute("movie") Integer movieId,  @RequestParam("currentCategory")  String currentCategory) {
-		shoppingCart.removeProduct(movieRepository.getMovieById(movieId));
-		return "redirect:.?category="+currentCategory;
+	@RequestMapping(value = "/nextPage",  method =  RequestMethod.POST)
+	public String nextPage(@RequestParam("currentCategory")  String currentCategory, @RequestParam(name = "page", required = false, defaultValue = "1") Integer pageNumber){
+		pageNumber++;
+		return "redirect:.?category="+currentCategory+"&page="+pageNumber;
 	}
 }
