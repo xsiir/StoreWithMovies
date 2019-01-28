@@ -6,12 +6,11 @@
 <title>Welcome to Spring Web MVC project</title>
 </head>
 
-<body style="background: grey">
+<body style="background: grey;">
 
 	<!-- PAGE TITLE -->
 	<div style="float: left; text-align: center">
 		<h1>MOVIE SHOP</h1>
-		${movieList.get(0).getCategory()}
 
 		<!-- SELECT BOX -->
 		<form action="/StoreWithMovies" method="GET">
@@ -63,14 +62,16 @@
 
 	<!-- LIST OF MOVIES -->
 	<div style="float: left">
-		<ul>
+		<ul style="margin:0px;">
 			<c:forEach var="listValue" items="${movieList}">
 				<li
-					style="background: orange; min-width: 450px; max-width: 450px; list-style: none; padding: 10px; border: solid;"><b>${listValue.getTitle()}</b><br>
-					${listValue.getCast()} <br> <form:form method="POST">
+					style="background: orange; min-width: 450px; max-width: 450px; list-style: none; padding: 9px; border: solid;"><b>${listValue.getTitle()}</b><br>
+					(${listValue.getYear()})    ${listValue.getCast()} <br> 
+					${listValue.getStory()}
+					<form:form method="POST">
 						<input type="hidden" name="movie" value="${listValue.getId()}" />
 						<input type="hidden" name="currentCategory"
-							value="${listValue.getCategory()}" />
+							value="${selectedCategory}" />
 						<input type="hidden" name="page" value="${currentPage}" />
 						<input type="submit" value="+" />
 					</form:form>${listValue.getPrice()}$ <br></li>
@@ -83,13 +84,13 @@
 			<form:form method="POST" style="float:left;" action="/StoreWithMovies/previousPage">
 				<input type="hidden" name="page" value="${currentPage}" />
 				<input type="hidden" name="currentCategory"
-					value="${movieList.get(0).getCategory()}" />
+					value="${selectedCategory}" />
 				<input type="submit" value="<--" style="width: 90px; height: 60px;" />
 			</form:form>
 			<form:form method="POST" style="float:left;" action="/StoreWithMovies/nextPage">
 				<input type="hidden" name="page" value="${currentPage}" />
 				<input type="hidden" name="currentCategory"
-					value="${movieList.get(0).getCategory()}" />
+					value="${selectedCategory}" />
 				<input type="submit" value="-->" style="width: 90px; height: 60px;"/>
 			</form:form>
 

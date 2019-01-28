@@ -9,5 +9,6 @@ public interface MovieRepository {
 	List<MovieDTO> getMovies();
 	List<MovieDTO> getMoviesByCategory(String category);
 	MovieDTO getMovieById(Integer id);
+    List<MovieDTO> getMoviesWithPagination(String category, Integer page);
 
 }

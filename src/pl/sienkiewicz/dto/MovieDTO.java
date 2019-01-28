@@ -46,8 +46,12 @@ public class MovieDTO {
 	public void setCategory(String category) {
 		this.category = category;
 	}
-	public char[] getYear() {
-		return year;
+	public String getYear() {
+		String year = "";
+		for(char c  : this.year) {
+			year += c;
+		}
+		return year.toString();
 	}
 	public void setYear(char[] year) {
 		this.year = year;

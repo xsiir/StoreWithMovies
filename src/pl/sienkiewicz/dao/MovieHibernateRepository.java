@@ -44,5 +44,15 @@ public class MovieHibernateRepository implements MovieRepository {
 				MovieDTO.class);
 		return query.getSingleResult();
 	}
+	
+	public List<MovieDTO> getMoviesWithPagination(String category, Integer page) {
+		List<MovieDTO> movieList = getMoviesByCategory(category);
+		
+		if (page * 5 > movieList.size()) {
+			return movieList.subList((movieList.size() / 5) * 5, movieList.size());
+		}
+		
+		return movieList.subList(page * 5 - 5, page * 5);
+	}
 
 }
